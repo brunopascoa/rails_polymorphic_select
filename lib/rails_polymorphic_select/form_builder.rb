@@ -16,9 +16,13 @@ module RailsPolymorphicSelect
       label_method = options.delete(:label_method)
 
       choices = models.map do |model_class|
-        [model_class.model_name.human, model_class.all.map { |record|
-          [label_for(record, label_method), record.to_global_id]
-        }]
+        if model_class.is_a?(Array)
+          model_class
+        else
+          [model_class.model_name.human, model_class.all.map { |record|
+              [label_for(record, label_method), record.to_global_id]
+            }]
+        end
       end
 
       select(method_name, choices, options, html_options)
